@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { format, parseISO } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR'
-import { GetStaticProps } from 'next';
+import { GetStaticPaths, GetStaticProps } from 'next';
 import {api} from '../../services/api';
 import { convertDurationToTimeString } from '../../utils/convertDurationToTimeString';
 
@@ -26,6 +26,13 @@ export default function Episode({episode}: EpisodeProps) {
     return (
         <h1>{episode.title}</h1>
     )
+}
+
+export const getStaticPaths: GetStaticPaths = async () => {
+    return {
+        paths:[],
+        fallback: 'blocking'
+    }
 }
 
 export const getStaticProps : GetStaticProps = async (ctx) => {
