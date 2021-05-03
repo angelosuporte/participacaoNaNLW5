@@ -26,6 +26,7 @@ export function Player(){
         playNext,
         playPrevious,
         hasNext,
+        clearPlayerState,
         hasPrevious
     } = usePlayer();
 
@@ -48,7 +49,19 @@ export function Player(){
         audioRef.current.addEventListener('timeupdate', () => {
             setProgress(Math.floor(audioRef.current.currentTime));
         });
+    }
 
+    function handleSeek(amount: number){
+        audioRef.current.currentTime = amount;
+        setProgress(amount);
+    }
+
+    function handleEpisodeEnded() {
+        if (hasNext) {
+            playNext()
+        } else {
+            clearPlayerState()
+        }
     }
 
     const episode = episodeList[currentEpisodeIndex]
@@ -78,7 +91,7 @@ export function Player(){
                 </div>
             )}
 
-            <footer className={! episode ? styles.empty : ''}>
+            <footer className={!episode ? styles.empty : ''}>
                 <div className={styles.progress}>
                     <span>{convertDurationToTimeString(progress)}</span>
                     <div className={styles.slider}>
@@ -87,15 +100,16 @@ export function Player(){
                         <Slider
                             max={episode.duration}
                             value={progress}
+                            onChange={handleSeek}
                             trackStyle={{ backgroundColor: '#04d361' }}
                             railStyle={{backgroundColor: '#9f75ff' }}
                             handleStyle={{ borderColor: '#04d361', borderWidth: 4}}
                         />
                     ) : (
-                        <div className={styles.emptyslider} />
+                        <div className={styles.emptySlider} />
                     )}
                     </div>
-                    <span>{convertDurationToTimeString(episode?.duration ?? 0)}</span>
+                    <span>{convertDurationToTimeString(!episode?.duration ?? 0)}</span>
                 </div>
 
                 { episode && (
@@ -103,6 +117,7 @@ export function Player(){
                         src={episode.url}
                         ref={audioRef}
                         autoPlay
+                        onEnded={handleEpisodeEnded}
                         loop={isLooping}
                         onPlay={() => setIsPlayingState(true)}
                         onPause={() => setIsPlayingState(false)}

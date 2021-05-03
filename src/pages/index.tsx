@@ -17,7 +17,7 @@ type Episode = {
   duration: string;
   durationAsString: string;
   url: string;
-  publishedAt: string;
+  publishedAt: string
   
 }
 
@@ -80,7 +80,7 @@ export default function Home({latestEpisodes, allEpisodes}: HomeProps ) {
             <th></th>
             </tr>
           </thead>
-          <body>
+          <tbody>
             {allEpisodes.map((episode, index) => {
               return (
                 <tr key={episode.id}>
@@ -109,7 +109,7 @@ export default function Home({latestEpisodes, allEpisodes}: HomeProps ) {
                 </tr>
               )
             })}
-          </body>
+          </tbody>
 
         </table>
 
